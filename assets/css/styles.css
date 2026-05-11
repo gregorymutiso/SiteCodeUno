@@ -39,6 +39,7 @@ html {
 
 .nav-toggle {
     display: none;
+    position: relative;
     border: none;
     background: transparent;
     cursor: pointer;
