@@ -527,6 +527,16 @@ section h2 {
         display: flex;
         flex-direction: column;
         gap: 3rem;
+        width: 100%;
+    }
+
+    .contact-form-section,
+    .contact-info {
+        width: 100%;
+    }
+
+    .contact-info {
+        display: block;
     }
 
     .hero h1 {
