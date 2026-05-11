@@ -1,13 +1,17 @@
-// Smooth scrolling for navigation links
+// Smooth scrolling for navigation links (only for same-page anchors)
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+        const href = this.getAttribute('href');
+        // Only prevent default and scroll if it's a same-page anchor (not linking to another page)
+        if (href.startsWith('#')) {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
         }
     });
 });
@@ -26,36 +30,69 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe all sections for animation
-document.querySelectorAll('section').forEach(section => {
-    observer.observe(section);
-});
+// Observe all sections for animation (only if IntersectionObserver is supported)
+if ('IntersectionObserver' in window) {
+    document.querySelectorAll('section').forEach(section => {
+        observer.observe(section);
+    });
+}
 
-// Sticky navigation background change on scroll
-window.addEventListener('scroll', () => {
-    const header = document.querySelector('.header');
-    if (window.scrollY > 100) {
+const header = document.querySelector('.header');
+let lastScrollY = window.scrollY;
+let ticking = false;
+
+// Throttled scroll handler for better performance
+function updateHeader() {
+    if (!header) return;
+
+    const currentScrollY = window.scrollY;
+
+    // Update background opacity
+    if (currentScrollY > 100) {
         header.style.background = 'rgba(255, 255, 255, 0.98)';
     } else {
         header.style.background = 'rgba(255, 255, 255, 0.95)';
     }
+
+    // Hide/show header based on scroll direction
+    // Only hide if scrolled down more than 80px, and show when scrolling up
+    if (currentScrollY > lastScrollY && currentScrollY > 80) {
+        header.classList.add('hidden');
+    } else if (currentScrollY < lastScrollY) {
+        header.classList.remove('hidden');
+    }
+
+    lastScrollY = currentScrollY;
+    ticking = false;
+}
+
+// Throttle scroll events for better performance
+window.addEventListener('scroll', () => {
+    if (!ticking) {
+        requestAnimationFrame(updateHeader);
+        ticking = true;
+    }
 });
 
-// Mobile menu toggle (if needed in future)
+// Mobile menu toggle
 const nav = document.querySelector('.nav');
 const navLinks = document.querySelector('.nav-links');
 const navToggle = document.querySelector('.nav-toggle');
 
-if (navToggle && navLinks) {
+if (navToggle && navLinks && nav) {
+    // Initialize aria attributes
     navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.setAttribute('aria-label', 'Open menu');
 
-    navToggle.addEventListener('click', () => {
+    navToggle.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent event bubbling
         const isOpen = navLinks.classList.toggle('open');
         navToggle.classList.toggle('open');
         navToggle.setAttribute('aria-expanded', String(isOpen));
         navToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
     });
 
+    // Close menu when clicking outside
     document.addEventListener('click', (event) => {
         if (navLinks.classList.contains('open') && !nav.contains(event.target)) {
             navLinks.classList.remove('open');
@@ -65,6 +102,7 @@ if (navToggle && navLinks) {
         }
     });
 
+    // Close menu when clicking on nav links
     document.querySelectorAll('.nav-links a').forEach(link => {
         link.addEventListener('click', () => {
             navLinks.classList.remove('open');
@@ -75,7 +113,7 @@ if (navToggle && navLinks) {
     });
 }
 
-// Simple form validation for contact forms (will be added later)
+// Simple form validation for contact forms
 function validateForm(form) {
     const inputs = form.querySelectorAll('input, textarea');
     let isValid = true;
@@ -92,11 +130,41 @@ function validateForm(form) {
     return isValid;
 }
 
-// Add loading animation for images
-document.querySelectorAll('img').forEach(img => {
-    img.addEventListener('load', () => {
-        img.style.opacity = '1';
+// Add real-time validation feedback for forms
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('form').forEach(form => {
+        const inputs = form.querySelectorAll('input, textarea');
+
+        inputs.forEach(input => {
+            // Reset border color when user starts typing
+            input.addEventListener('input', () => {
+                if (input.style.borderColor === 'rgb(220, 53, 69)') { // #dc3545 in rgb
+                    input.style.borderColor = '#ddd';
+                }
+            });
+
+            // Also reset on focus
+            input.addEventListener('focus', () => {
+                if (input.style.borderColor === 'rgb(220, 53, 69)') {
+                    input.style.borderColor = '#ddd';
+                }
+            });
+        });
     });
-    img.style.opacity = '0';
-    img.style.transition = 'opacity 0.3s';
+});
+
+// Add loading animation for images (prevent flash of invisible images)
+document.querySelectorAll('img').forEach(img => {
+    // Only apply if image is not already loaded
+    if (!img.complete) {
+        img.style.opacity = '0';
+        img.style.transition = 'opacity 0.3s ease';
+
+        img.addEventListener('load', () => {
+            img.style.opacity = '1';
+        });
+    } else {
+        // Image is already loaded/cached
+        img.style.opacity = '1';
+    }
 });

@@ -5,26 +5,51 @@
     box-sizing: border-box;
 }
 
+:root {
+    --header-height: 80px;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     line-height: 1.6;
     color: #333;
     scroll-behavior: smooth;
+    padding-top: var(--header-height);
 }
 
 html {
     scroll-behavior: smooth;
 }
 
+/* Animations */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in-up.fade-in-up {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* Header and Navigation */
 .header {
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
+    height: var(--header-height);
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     z-index: 1000;
     border-bottom: 1px solid #e5e5e5;
+    transform: translateY(0);
+    transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.header.hidden {
+    transform: translateY(-100%);
 }
 
 .nav {
@@ -206,7 +231,7 @@ html {
 }
 
 main > section:first-child {
-    padding-top: 120px;
+    padding-top: 0;
 }
 
 /* Sections */
@@ -405,13 +430,30 @@ section h2 {
 /* Responsive Design */
 @media (max-width: 768px) {
     .nav {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: stretch;
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1.5rem;
+        min-height: var(--header-height);
     }
 
     .nav-toggle {
         display: block;
+        order: 1;
+        flex: 0 0 auto;
+    }
+
+    .logo {
+        order: 2;
+        flex: 1;
+        text-align: center;
+    }
+
+    .cta-button {
+        order: 3;
+        flex: 0 0 auto;
+        white-space: nowrap;
     }
 
     .nav-links {
@@ -451,11 +493,6 @@ section h2 {
         padding: 0.75rem 0;
     }
 
-    .cta-button {
-        width: 100%;
-        text-align: center;
-    }
-
     .hero {
         flex-direction: column;
         text-align: center;
@@ -489,7 +526,7 @@ section h2 {
 
 /* Services Page Styles */
 .services-page {
-    padding-top: 120px;
+    padding-top: 40px;
 }
 
 .services-page > h1 {
@@ -609,7 +646,7 @@ section h2 {
 
 /* Portfolio Page Styles */
 .portfolio-page {
-    padding-top: 120px;
+    padding-top: 40px;
 }
 
 .portfolio-page > h1 {
@@ -655,7 +692,7 @@ section h2 {
 
 /* About Page Styles */
 .about-page {
-    padding-top: 120px;
+    padding-top: 40px;
 }
 
 .about-hero {
@@ -788,7 +825,7 @@ section h2 {
 
 /* Contact Page Styles */
 .contact-page {
-    padding-top: 120px;
+    padding-top: 40px;
 }
 
 .contact-hero {
