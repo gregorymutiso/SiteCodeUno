@@ -493,6 +493,12 @@ section h2 {
         padding: 0.75rem 0;
     }
 
+    .contact-content {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+    }
+
     .hero {
         flex-direction: column;
         text-align: center;
