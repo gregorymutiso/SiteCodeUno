@@ -193,17 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const templateParams = {
-                from_name: contactForm.querySelector('#name')?.value.trim() || '',
-                reply_to: contactForm.querySelector('#email')?.value.trim() || '',
-                phone: contactForm.querySelector('#phone')?.value.trim() || '',
-                company: contactForm.querySelector('#company')?.value.trim() || '',
-                project_type: contactForm.querySelector('#project-type')?.value.trim() || '',
-                budget_range: contactForm.querySelector('#budget')?.value.trim() || '',
-                message: contactForm.querySelector('#message')?.value.trim() || ''
-            };
-
-            emailjs.send('service_4gfkhgc', 'template_9yvkgd9', templateParams)
+            emailjs.sendForm('service_4gfkhgc', 'template_9yvkgd9', contactForm)
                 .then(() => {
                     if (statusElement) {
                         statusElement.textContent = 'Thank you! Your message has been sent. I will reply within 24 hours.';
