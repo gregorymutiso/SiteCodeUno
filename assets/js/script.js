@@ -151,6 +151,57 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
+
+    const contactForm = document.getElementById('contact-form');
+    const statusElement = document.getElementById('form-status');
+
+    if (contactForm) {
+        emailjs.init('kNoaG4-J0Vjo7HCSR');
+
+        contactForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            if (!validateForm(contactForm)) {
+                if (statusElement) {
+                    statusElement.textContent = 'Please fill in all required fields.';
+                    statusElement.style.color = '#dc3545';
+                }
+                return;
+            }
+
+            const submitButton = contactForm.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.textContent = 'Sending...';
+            }
+
+            if (statusElement) {
+                statusElement.textContent = 'Sending your message...';
+                statusElement.style.color = '#333';
+            }
+
+            emailjs.sendForm('service_4gfkhgc', 'template_9yvkgd9', contactForm)
+                .then(() => {
+                    if (statusElement) {
+                        statusElement.textContent = 'Thank you! Your message has been sent. I will reply within 24 hours.';
+                        statusElement.style.color = '#2d7a46';
+                    }
+                    contactForm.reset();
+                })
+                .catch(() => {
+                    if (statusElement) {
+                        statusElement.textContent = 'Unable to send the message right now. Please try again later or email sitecodeuno@gmail.com directly.';
+                        statusElement.style.color = '#dc3545';
+                    }
+                })
+                .finally(() => {
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Send Message';
+                    }
+                });
+        });
+    }
 });
 
 // Add loading animation for images (prevent flash of invisible images)

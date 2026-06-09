@@ -83,6 +83,7 @@
                             <textarea id="message" name="message" rows="6" required placeholder="Describe your current situation, goals, and what you're looking to achieve..."></textarea>
                         </div>
 
+                        <div id="form-status" class="form-status" aria-live="polite"></div>
                         <button type="submit" class="cta-primary">Send Message</button>
                     </form>
                 </div>
@@ -178,20 +179,7 @@
         </div>
     </footer>
 
+    <script src="https://cdn.emailjs.com/sdk/3.6.2/email.min.js"></script>
     <script src="assets/js/script.js"></script>
-    <script>
-        // Form validation and submission
-        document.getElementById('contact-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            if (validateForm(this)) {
-                // Here you would typically send the form data to your server
-                alert('Thank you for your message! We\'ll get back to you within 24 hours.');
-                this.reset();
-            } else {
-                alert('Please fill in all required fields.');
-            }
-        });
-    </script>
 </body>
 </html>
