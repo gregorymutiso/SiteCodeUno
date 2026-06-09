@@ -156,6 +156,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusElement = document.getElementById('form-status');
 
     if (contactForm) {
+        if (!window.emailjs || typeof window.emailjs.init !== 'function') {
+            console.error('EmailJS library did not load.');
+            if (statusElement) {
+                statusElement.textContent = 'Email service is unavailable right now. Please refresh the page or email sitecodeuno@gmail.com directly.';
+                statusElement.style.color = '#dc3545';
+            }
+            return;
+        }
+
         emailjs.init('kNoaG4-J0Vjo7HCSR');
 
         contactForm.addEventListener('submit', function (event) {
@@ -180,8 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusElement.style.color = '#333';
             }
 
-            if (!window.emailjs) {
-                console.error('EmailJS is not loaded.');
+            if (!window.emailjs || typeof window.emailjs.sendForm !== 'function') {
+                console.error('EmailJS sendForm is not available.');
                 if (statusElement) {
                     statusElement.textContent = 'Email service is unavailable. Please try again later or email sitecodeuno@gmail.com directly.';
                     statusElement.style.color = '#dc3545';
