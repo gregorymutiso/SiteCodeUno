@@ -180,7 +180,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusElement.style.color = '#333';
             }
 
-            emailjs.sendForm('service_4gfkhgc', 'template_9yvkgd9', contactForm)
+            if (!window.emailjs) {
+                console.error('EmailJS is not loaded.');
+                if (statusElement) {
+                    statusElement.textContent = 'Email service is unavailable. Please try again later or email sitecodeuno@gmail.com directly.';
+                    statusElement.style.color = '#dc3545';
+                }
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Send Message';
+                }
+                return;
+            }
+
+            const templateParams = {
+                from_name: contactForm.querySelector('#name')?.value.trim() || '',
+                reply_to: contactForm.querySelector('#email')?.value.trim() || '',
+                phone: contactForm.querySelector('#phone')?.value.trim() || '',
+                company: contactForm.querySelector('#company')?.value.trim() || '',
+                project_type: contactForm.querySelector('#project-type')?.value.trim() || '',
+                budget_range: contactForm.querySelector('#budget')?.value.trim() || '',
+                message: contactForm.querySelector('#message')?.value.trim() || ''
+            };
+
+            emailjs.send('service_4gfkhgc', 'template_9yvkgd9', templateParams)
                 .then(() => {
                     if (statusElement) {
                         statusElement.textContent = 'Thank you! Your message has been sent. I will reply within 24 hours.';
@@ -188,7 +211,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     contactForm.reset();
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.error('EmailJS error', error);
                     if (statusElement) {
                         statusElement.textContent = 'Unable to send the message right now. Please try again later or email sitecodeuno@gmail.com directly.';
                         statusElement.style.color = '#dc3545';
