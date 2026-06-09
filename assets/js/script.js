@@ -156,17 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusElement = document.getElementById('form-status');
 
     if (contactForm) {
-        if (!window.emailjs || typeof window.emailjs.init !== 'function') {
-            console.error('EmailJS library did not load.');
-            if (statusElement) {
-                statusElement.textContent = 'Email service is unavailable right now. Please refresh the page or email sitecodeuno@gmail.com directly.';
-                statusElement.style.color = '#dc3545';
-            }
-            return;
-        }
-
-        emailjs.init('kNoaG4-J0Vjo7HCSR');
-
         contactForm.addEventListener('submit', function (event) {
             event.preventDefault();
 
@@ -181,48 +170,43 @@ document.addEventListener('DOMContentLoaded', () => {
             const submitButton = contactForm.querySelector('button[type="submit"]');
             if (submitButton) {
                 submitButton.disabled = true;
-                submitButton.textContent = 'Sending...';
+                submitButton.textContent = 'Opening email...';
             }
 
             if (statusElement) {
-                statusElement.textContent = 'Sending your message...';
+                statusElement.textContent = 'Opening your email client...';
                 statusElement.style.color = '#333';
             }
 
-            if (!window.emailjs || typeof window.emailjs.sendForm !== 'function') {
-                console.error('EmailJS sendForm is not available.');
-                if (statusElement) {
-                    statusElement.textContent = 'Email service is unavailable. Please try again later or email sitecodeuno@gmail.com directly.';
-                    statusElement.style.color = '#dc3545';
-                }
-                if (submitButton) {
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Send Message';
-                }
-                return;
-            }
+            const name = contactForm.querySelector('#name')?.value.trim() || '';
+            const email = contactForm.querySelector('#email')?.value.trim() || '';
+            const phone = contactForm.querySelector('#phone')?.value.trim() || '';
+            const company = contactForm.querySelector('#company')?.value.trim() || '';
+            const projectType = contactForm.querySelector('#project-type')?.value.trim() || '';
+            const budgetRange = contactForm.querySelector('#budget')?.value.trim() || '';
+            const message = contactForm.querySelector('#message')?.value.trim() || '';
 
-            emailjs.sendForm('service_4gfkhgc', 'template_9yvkgd9', contactForm)
-                .then(() => {
-                    if (statusElement) {
-                        statusElement.textContent = 'Thank you! Your message has been sent. I will reply within 24 hours.';
-                        statusElement.style.color = '#2d7a46';
-                    }
-                    contactForm.reset();
-                })
-                .catch((error) => {
-                    console.error('EmailJS error', error);
-                    if (statusElement) {
-                        statusElement.textContent = 'Unable to send the message right now. Please try again later or email sitecodeuno@gmail.com directly.';
-                        statusElement.style.color = '#dc3545';
-                    }
-                })
-                .finally(() => {
-                    if (submitButton) {
-                        submitButton.disabled = false;
-                        submitButton.textContent = 'Send Message';
-                    }
-                });
+            const subject = `Website inquiry from ${name || 'a visitor'}`;
+            const bodyLines = [
+                `Name: ${name}`,
+                `Email: ${email}`,
+                `Phone: ${phone}`,
+                `Company: ${company}`,
+                `Project type: ${projectType}`,
+                `Budget range: ${budgetRange}`,
+                '',
+                `Message:`,
+                `${message}`
+            ];
+            const body = bodyLines.join('\n');
+            const mailtoLink = `mailto:sitecodeuno@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            window.location.href = mailtoLink;
+
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Send Message';
+            }
         });
     }
 });
