@@ -156,10 +156,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusElement = document.getElementById('form-status');
 
     if (contactForm) {
-        contactForm.addEventListener('submit', async function (event) {
-            event.preventDefault();
-
+        contactForm.addEventListener('submit', function (event) {
             if (!validateForm(contactForm)) {
+                event.preventDefault();
+
                 if (statusElement) {
                     statusElement.textContent = 'Please fill in all required fields.';
                     statusElement.style.color = '#dc3545';
@@ -176,70 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (statusElement) {
                 statusElement.textContent = 'Sending your message...';
                 statusElement.style.color = '#333';
-            }
-
-            const name = contactForm.querySelector('#name')?.value.trim() || '';
-            const email = contactForm.querySelector('#email')?.value.trim() || '';
-            const phone = contactForm.querySelector('#phone')?.value.trim() || '';
-            const company = contactForm.querySelector('#company')?.value.trim() || '';
-            const projectType = contactForm.querySelector('#project-type')?.value.trim() || '';
-            const budgetRange = contactForm.querySelector('#budget')?.value.trim() || '';
-            const message = contactForm.querySelector('#message')?.value.trim() || '';
-
-            const formData = new FormData(contactForm);
-            formData.set('_subject', `New website inquiry from ${name || 'a visitor'}`);
-            formData.set('_captcha', 'false');
-            formData.set('_template', 'table');
-            formData.set('_next', 'thank-you.html');
-
-            const data = Object.fromEntries(formData.entries());
-
-            try {
-                const response = await fetch('https://formsubmit.co/ajax/sitecodeuno@gmail.com', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                if (response.ok) {
-                    if (statusElement) {
-                        statusElement.textContent = 'Thanks! Your message has been sent successfully.';
-                        statusElement.style.color = '#1f7a1f';
-                    }
-                    contactForm.reset();
-                    return;
-                }
-
-                throw new Error('Submission failed');
-            } catch (error) {
-                if (statusElement) {
-                    statusElement.textContent = 'We could not send your message automatically. Please email us directly at sitecodeuno@gmail.com.';
-                    statusElement.style.color = '#dc3545';
-                }
-
-                const subject = `Website inquiry from ${name || 'a visitor'}`;
-                const bodyLines = [
-                    `Name: ${name}`,
-                    `Email: ${email}`,
-                    `Phone: ${phone}`,
-                    `Company: ${company}`,
-                    `Project type: ${projectType}`,
-                    `Budget range: ${budgetRange}`,
-                    '',
-                    `Message:`,
-                    `${message}`
-                ];
-                const body = bodyLines.join('\n');
-                const mailtoLink = `mailto:sitecodeuno@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                window.location.href = mailtoLink;
-            } finally {
-                if (submitButton) {
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Send Message';
-                }
             }
         });
     }

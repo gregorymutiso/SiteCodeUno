@@ -34,11 +34,9 @@
             <div class="contact-content">
                 <div class="contact-form-section">
                     <h2>Start Your Project</h2>
-                    <form id="contact-form" action="https://formsubmit.co/sitecodeuno@gmail.com" method="POST">
+                    <form id="contact-form" name="contact" method="POST" data-netlify="true" action="/thank-you.html">
+                        <input type="hidden" name="form-name" value="contact">
                         <input type="hidden" name="_subject" value="New website inquiry from SiteCode Uno">
-                        <input type="hidden" name="_captcha" value="false">
-                        <input type="hidden" name="_template" value="table">
-                        <input type="hidden" name="_next" value="thank-you.html">
 
                         <div class="form-group">
                             <label for="name">Name *</label>
