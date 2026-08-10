@@ -34,7 +34,12 @@
             <div class="contact-content">
                 <div class="contact-form-section">
                     <h2>Start Your Project</h2>
-                    <form id="contact-form" action="javascript:void(0)" method="post" onsubmit="event.preventDefault(); return false;">
+                    <form id="contact-form" action="https://formsubmit.co/sitecodeuno@gmail.com" method="POST">
+                        <input type="hidden" name="_subject" value="New website inquiry from SiteCode Uno">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_template" value="table">
+                        <input type="hidden" name="_next" value="thank-you.html">
+
                         <div class="form-group">
                             <label for="name">Name *</label>
                             <input type="text" id="name" name="name" required>
