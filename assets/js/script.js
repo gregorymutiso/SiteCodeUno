@@ -115,15 +115,15 @@ if (navToggle && navLinks && nav) {
 
 // Simple form validation for contact forms
 function validateForm(form) {
-    const inputs = form.querySelectorAll('input, textarea');
+    const fields = form.querySelectorAll('input, textarea, select');
     let isValid = true;
 
-    inputs.forEach(input => {
-        if (input.hasAttribute('required') && !input.value.trim()) {
+    fields.forEach(field => {
+        if (field.hasAttribute('required') && !field.value.trim()) {
             isValid = false;
-            input.style.borderColor = '#dc3545';
+            field.style.borderColor = '#dc3545';
         } else {
-            input.style.borderColor = '#ddd';
+            field.style.borderColor = '#ddd';
         }
     });
 
